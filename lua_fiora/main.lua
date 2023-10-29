@@ -107,7 +107,7 @@ function combo_mode()
             -- Ally turret but the opponent's side
             -- Weirdos
             if config.w.diveturret.bool or not target.is_under_ally_turret then
-                if config.w.semi_w.bool then  -- Check if semi_w is enabled
+                if config.w.semi_w.bool then -- Check if semi_w is enabled
                     -- Add a debug message to check if this block is reached
                     print("Casting Semi-W in Combo Mode")
                     -- Add logic for semi-w here
@@ -163,7 +163,7 @@ end
 function on_update()
     if orbwalker:can_move(0.07) then
         if orbwalker.combo_mode then
-            combo_mode()  -- Call combo_mode when in combo mode
+            combo_mode() -- Call combo_mode when in combo mode
         elseif orbwalker.harass then
             harass_mode()
         elseif orbwalker.lane_clear_mode then
@@ -199,7 +199,6 @@ function on_update()
     -- Use Fiora's E as a basic attack reset in the on_update function
     use_e_basic_attack_reset(target)
 end
-
 
 function on_anti_gapcloser(sender, args)
     if config.e.gapcloser and sender and sender.is_enemy and args.end_position:distance(myhero) < spells.e.range then
@@ -269,7 +268,6 @@ function setup_menu()
     config.draw.rcolor = draw_settings:add_colorpick("Fiora.Draw.RColor", "R Range Color", { 1, 1, 0, 1 })
 end
 
-
 function on_sdk_load(sdk)
     -- Register Fiora's spells
     spells.q = plugin_sdk:register_spell(spellslot.q, 400.0) -- Adjust range
@@ -297,4 +295,3 @@ function on_sdk_unload(sdk)
     plugin_sdk:remove_spell(spells.r)
     menu:delete_tab(mainmenu)
 end
-

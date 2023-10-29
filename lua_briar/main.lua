@@ -197,7 +197,6 @@ function harass_mode()
     end
 end
 
-
 function jungle_clear_mode()
     ---if any of q,w,e disabled just return
     if config.q.jungleclear.bool ~= true and config.e.jungleclear.bool ~= true and config.w.jungleclear.bool ~= true then

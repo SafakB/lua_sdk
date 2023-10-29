@@ -1,0 +1,6 @@
+{
+	"displayname":"Better Auto Leveler",
+	"name" : "lua_autoleveler",
+	"entry" : "main.lua",
+	"type": 0
+}

@@ -22,6 +22,9 @@ local showprediction = nil
 ---@type TreeEntry
 local showgeometry = nil
 
+---@type TreeEntry
+local testcamera = nil
+
 local spells =
 {
     ---@type script_spell
@@ -50,6 +53,7 @@ function setup_menu()
     showitems = mainmenu:add_checkbox("lua.showitems", "Show Items", false, false)
     showspellw = mainmenu:add_checkbox("lua.showspellw", "Show Spell [W]", false, false)
     showprediction = mainmenu:add_checkbox("lua.showprediction", "Show Prediction", false, false)
+    testcamera = mainmenu:add_checkbox("lua.testcamera", "Test Camera", false, false)
     castspells = mainmenu:add_hotkey("lua.castspells", "Cast Spell", tree_hotkey_mode.Hold, char_key("C"), false, false)
 
 
@@ -97,9 +101,22 @@ function on_create(sender)
     end
 end
 
+function test_camera()
+    hud.hud_camera_logic:set_zoom_factor(80)
+
+
+    local angle = hud.hud_camera_logic.view_angle
+    angle.x = 60
+
+    hud.hud_camera_logic:set_view_angle(angle)
+end
+
 function on_update()
     --utils.print_hello()
 
+    if testcamera.bool then
+        test_camera()
+    end
 
 
     if orbwalker.combo_mode then
@@ -244,10 +261,6 @@ function draw_heroes()
 end
 
 function draw_minions()
-
-  
-
-
     for i, value in pairs(entitylist.minions.all) do
         if value:is_valid(false) and not value.is_dead and not value.is_visible_on_screen then
             local position = value.position
@@ -260,7 +273,6 @@ function draw_minions()
     for i, value in pairs(entitylist.minions.enemy) do
         if value:is_valid(false) and not value.is_dead then
             draw_manager:add_circle(value.position, 30, 0xFFFFFFFF, 2, -1, 30)
-
         end
     end
 
@@ -276,12 +288,11 @@ function draw_minions()
             draw_manager:add_circle(value.position, 30, 0xFFFFFFFF, 2, -1, 30)
         end
     end
-
 end
 
 function draw_entitylist()
     for i, value in pairs(entitylist.spawnpoints.all) do
-        if value:is_valid(false)  then
+        if value:is_valid(false) then
             draw_manager:add_circle(value.position, 30, colors.ORANGE, 2, -1, 30)
         end
     end
@@ -403,10 +414,9 @@ end
 function on_global_event(hash_name, name, params)
     if params:get_argument(1) == myhero.network_id then
         print("on_global_event " ..
-        string.format("hash %x - name %s arg[0] %x - arg[1] %x", hash_name, name, params:get_argument(0),
-            params:get_argument(1)))
+            string.format("hash %x - name %s arg[0] %x - arg[1] %x", hash_name, name, params:get_argument(0),
+                params:get_argument(1)))
     end
-  
 end
 
 ---@param target game_object_script
