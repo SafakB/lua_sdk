@@ -1,0 +1,6 @@
+{
+	"displayname":"lua_prediction",
+	"name" : "lua_prediction",
+	"entry" : "main.lua",
+	"type": 3
+}

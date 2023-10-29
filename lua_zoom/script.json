@@ -1,0 +1,6 @@
+{
+	"displayname":"Zoom Hack",
+	"name" : "lua_zoomhack",
+	"entry" : "main.lua",
+	"type": 0
+}

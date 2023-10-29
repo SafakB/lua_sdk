@@ -1,0 +1,260 @@
+local simple_walker = require("simple_walker")
+
+---@type tree_tab
+local menu_elements = nil
+---@type tree_tab
+local sdk_test = nil
+
+
+local config = {}
+
+
+local spells =
+{
+    ---@type script_spell
+    q = nil,
+    ---@type script_spell
+    w = nil,
+}
+
+
+---@type loaded_texture
+local texture_test = nil
+
+function cool_menu_init()
+    mainmenu = menu:create_tab("sdk_lua", "Lua SDK")
+    menu_elements = mainmenu:add_tab("LUA.MenuElements", "Menu Elements")
+    sdk_test = mainmenu:add_tab("LUA.SDKTest", "SDK Test")
+
+    if sdk_test ~= nil then
+        config.show_path = sdk_test:add_checkbox("show_path", "Show Path", false, false)
+        config.show_drawings = sdk_test:add_checkbox("show_drawings", "Show Drawings", false, false)
+    end
+
+
+    if menu_elements ~= nil then
+        config.checkbox = menu_elements:add_checkbox("LUA.Checkbox", "Checkbox", false, false)
+        config.checkbox1 = menu_elements:add_checkbox("LUA.Checkbox1", "Vector test", false, false)
+        config.combobox = menu_elements:add_combobox("LUA.Combobox", "ComboBox",
+            { { name = "test", texture = 0 }, { name = "test2" } }, 0, false)
+        config.hotkey = menu_elements:add_hotkey("LUA.Hotkey", "Hotkey", tree_hotkey_mode.Toggle, 31, false, false)
+
+        if config.hotkey:get_hotkey_type() == tree_hotkey_mode.Toggle then
+            print("mode is toggle")
+        end
+
+        ---@param entry tree_entry
+        config.hotkey:add_property_change_callback(function(entry)
+            print("prop changed" .. entry:key() .. " " .. entry:display_name())
+        end)
+
+        config.colorpick = menu_elements:add_colorpick("LUA.Colorpick", "Color picker", { 1.0, 0.0, 0.0, 1.0 }, false)
+        config.priority = menu_elements:add_prority_list("LUA.Priority", "Display Priority",
+            { { display_name = "test 1", key = 0 }, { display_name = "test 2", key = 1 } }, true, false)
+        menu_elements:add_slider("Lua.Slider", "Slider", 10, 1, 100, false)
+    end
+end
+
+function cool_menu_destroy()
+    if mainmenu ~= nil then
+        menu:delete_tab(mainmenu)
+    end
+end
+
+function vector_tests()
+    local cursor_position = hudmanager.input.game_cursor_position
+    local veczero = vector(100.0, 200.0)
+    local vector_other = vector(100.0, 300.0)
+    local result_mult_2 = veczero * 2.0
+    local result_mult_vector = veczero * vector_other
+    local cursor_pos2d = game_input.cursor_pos
+
+    --print(string.format("veczero x = %d y = %d", cursor_pos2d.x, cursor_pos2d.y))
+    --print(string.format("count %d", cursor_position:count_enemies_in_range(1000.0)))
+    --print(string.format("veczero x = %0.1f y = %0.1f", veczero.x, veczero.y))
+    --print(string.format("result_mult_2 x = %0.1f y = %0.1f", result_mult_2.x, result_mult_2.y))
+    --print(string.format("result_mult_vector x = %0.1f y = %0.1f", result_mult_vector.x, result_mult_vector.y))
+end
+
+function draw_heroes()
+    for i, entity in pairs(entitylist.heroes.ally) do
+        draw_manager:add_circle(entity.position, 60, 0xFF0000, 2, -1, 30)
+    end
+
+    for i, entity in pairs(entitylist.heroes.enemy) do
+        draw_manager:add_circle(entity.position, 60, 0xFC0000, 2, -1, 30)
+    end
+end
+
+function draw_minions()
+    for i, value in pairs(entitylist.minions.all) do
+        if value:is_valid(false) and not value:is_dead() and not value:is_visible_on_screen() then
+            local position = value.position
+            draw_manager:add_circle(position, 30, 0xFFFFFFFF, 2, -1, 30)
+            draw_manager:add_text(position, 0xFFFFFFFF, 20, string.format("%s", value:get_name_cstr()))
+        end
+    end
+
+
+    for i, value in pairs(entitylist.minions.enemy) do
+        if (value:is_valid(false) and not value:is_dead()) then
+            draw_manager:add_circle(value.position, 30, 0xFFFFFFFF, 2, -1, 30)
+        end
+    end
+
+    for i, value in pairs(entitylist.minions.ally) do
+        if value:is_valid(false) and not value:is_dead() then
+            draw_manager:add_circle(value.position, 30, 0xFFFFFFFF, 2, -1, 30)
+        end
+    end
+
+    for i, value in pairs(entitylist.minions.neutral) do
+        if value:is_valid(false) and not value:is_dead() then
+            draw_manager:add_circle(value.position, 30, 0xFFFFFFFF, 2, -1, 30)
+        end
+    end
+end
+
+function draw_manager_test()
+
+    local position = myhero.position;
+
+    draw_manager:add_circle(position, 250, 0xFFFFFFFF)
+    draw_manager:add_circle_gradient(position, 120, 0xFFFFFFFF, 0xFFFFFFFF)
+    draw_manager:add_circle_on_screen(vector(200, 200), 100, 0xFFFFFFFF)
+    draw_manager:add_circle_on_screen_ex(vector(500, 500), 120, 0xFFFFFFFF, 0.5)
+    draw_manager:add_filled_circle(position, 30, 0xFFFFFFFF)
+    draw_manager:add_filled_circle_on_screen(vector(600, 600), 45, 0xFFFFFFFF)
+    draw_manager:add_line(position, hudmanager.input.game_cursor_position, 0xFFFFFFFF)
+    draw_manager:add_line_on_screen(vector(100, 100), vector(500, 500), 0xFFFFFFFF)
+    draw_manager:add_rect(vector(350, 350), vector(500, 500), 0xFFFFFFFF)
+    draw_manager:add_rectangle_3d(position, hudmanager.input.game_cursor_position, 0xFFFFFFFF, 40, 20,
+        1, 2)
+    draw_manager:draw_circle_on_minimap(position, 1000, 0xFFFFFFFF)
+end
+
+function test_navmesh()
+    print(string.format("flag : %d", navmesh:get_collision_flag(hudmanager.input.game_cursor_position)))
+end
+
+function on_draw()
+    draw_heroes()
+    draw_minions()
+    --test_navmesh()
+    if config.show_drawings:get_bool() then
+        draw_manager_test()
+    end
+
+
+
+
+   
+    
+    
+    
+
+    local cursor_position = hudmanager.input.game_cursor_position
+    local current_pos = myhero.position
+
+    if config.show_path:get_bool() then
+        local myPath = myhero:get_real_path()
+        for i = 1, #myPath - 1 do
+            draw_manager:add_circle(myPath[i], 30, 0xFFFFFFFF, 2, -1, 30)
+            draw_manager:add_line(myPath[i], myPath[i + 1], 0xFFFFFFFF, 5.0)
+        end
+
+        draw_manager:add_line(current_pos, current_pos:extend(cursor_position, myhero:get_attack_range()), 0xFFFFFFFF,
+            5.0)
+    end
+
+
+
+
+    if config.checkbox:get_bool() then
+        local cursor_position = hudmanager.input.game_cursor_position
+        draw_manager:add_circle(cursor_position, 500, 0xFFFFFFFF, 2.0, -1.0, 200)
+        draw_manager:add_text(cursor_position, 0xFFFFFFFF, 20,
+            string.format("cursor %.2f,%.2f", cursor_position.x, cursor_position.y))
+        draw_manager:add_line(vector.zero, cursor_position, 0xFFFFFFFF, 5.0)
+        draw_manager:add_rectangle_3d(vector.zero, cursor_position, 0xFFFFFFFF, 80.0, 2.0, 2.0, 1.0)
+
+
+        --pfine
+        draw_manager:add_image(texture_test.texture, vector(300, 300), vector(32, 32), 1.0)
+    end
+
+
+    if myhero:has_buff(buff_hash("AsheQ")) then
+        draw_manager:add_text(myhero.position, 0xFFFFFFFF, 18, "AsheQ Buff")
+    end
+
+
+    for index, value in ipairs(entitylist.heroes.enemy) do
+        if value:get_distance(myhero) < 1000.0 and myhero:is_facing(value.position) and not value:is_dead() then
+            draw_manager:add_text(myhero.position, 0xFFFFFFFF, 18, "IsFacing")
+        end
+    end
+
+    if gui.is_open then
+        draw_manager:add_text_on_screen(vector(500, 500), 0xFFFFFFFF, 18, "gui_is_open")
+    end
+
+    -- if myhero:has_buff_type(16) then
+    --     print(string.format("range %f - name %s", spells.w._range,spells.w:name()))
+    -- end
+    --
+
+
+    ---print(string.format("%d", entitylist.manager:get_max_objects()))
+end
+
+function on_update()
+    if config.checkbox:get_bool() then
+        --hudmanager.hud:set_max_zoom(3440.0)
+    end
+
+    if config.checkbox1:get_bool() then
+        vector_tests()
+    end
+
+    -- myhero:issue_order(vector.zero, true, true, false)
+    -- myhero:issue_order(hudmanager.select:get_selected_object(), true, true)
+    -- myhero:cast_spell(spellslot.r, vector.zero, false, false)
+end
+
+---@param sender  game_object
+function on_create(sender)
+    print("obj create" .. string.format("name %s", sender:get_name()))
+end
+
+function on_sdk_load(sdk)
+    --menu initialization
+    cool_menu_init()
+    texture_test = draw_manager:load_texture_from_file("aurora.png")
+    print(inspect(texture_test))
+    --register callbacks
+    cb.add(events.on_update, on_update)
+    cb.add(events.on_draw, on_draw)
+    cb.add(events.on_create_object, on_create)
+
+
+    spells.q = plugin_sdk:register_spell(spellslot.q, 1000.0)
+    spells.w = plugin_sdk:register_spell(spellslot.w, 1200.0)
+
+    print("before orb")
+    simple_walker.register()
+end
+
+function on_sdk_unload(sdk)
+    --clean the callbacks first
+    cb.remove(events.on_update, on_update)
+    cb.remove(events.on_draw, on_draw)
+    cb.remove(events.on_create_object, on_create)
+
+    --make sure to destroy your menu
+    cool_menu_destroy()
+    simple_walker.unregister()
+
+    plugin_sdk:remove_spell(spells.q)
+    plugin_sdk:remove_spell(spells.w)
+end

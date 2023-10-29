@@ -1,0 +1,6 @@
+{
+	"displayname":"lua_damagelib",
+	"name" : "lua_damagelib",
+	"entry" : "main.lua",
+	"type": 3
+}

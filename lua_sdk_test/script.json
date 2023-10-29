@@ -1,0 +1,6 @@
+{
+	"displayname":"sdk test lua",
+	"name" : "sdk_test_plugin_1",
+	"entry" : "main.lua",
+	"type": 0
+}

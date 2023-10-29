@@ -1,0 +1,6 @@
+{
+	"displayname":"lua_targetselector",
+	"name" : "lua_targetselector",
+	"entry" : "main.lua",
+	"type": 3
+}

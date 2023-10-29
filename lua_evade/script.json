@@ -1,0 +1,6 @@
+{
+	"displayname":"lua_evade",
+	"name" : "lua_evade",
+	"entry" : "main.lua",
+	"type": 3
+}

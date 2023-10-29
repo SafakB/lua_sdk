@@ -1,0 +1,6 @@
+{
+	"displayname":"lua_healthprediction",
+	"name" : "lua_healthprediction",
+	"entry" : "main.lua",
+	"type": 3
+}

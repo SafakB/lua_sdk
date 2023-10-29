@@ -1,0 +1,9 @@
+{
+	"displayname": "Safak GALIO",
+	"name": "lua_galio",
+	"entry": "main.lua",
+	"type": 1,
+	"champions": [
+		3
+	]
+}
